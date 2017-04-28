@@ -1,21 +1,181 @@
-window.onload = function() {
-	var canvas = document.createElement('canvas');
-	canvas.width = 320;
-	canvas.height = 240;
-	canvas.style.display = 'block';
+DEBUG = true;
 
-	// Create a RGB raster object for the 2D canvas.
+var runtime = null; //holds the object that we need to manipulate the scene during the runtime
+var root = null; //reference to our matrixTransform obj
+
+var initDone = false; //false as long we haven't used the initialized the tracker
+var doTracking = true; //to track or not to track
+
+var width = 320; //width of our canvas/video
+var height = 240; //height of those
+var canvas = null; //global canvas obj that we need for render purposes
+var videoCanvas = null; //same
+
+var detector = null; //marker detector obj
+var raster = null; //raster obj
+
+var resultMat = null; //the matrix we get from the JSARToolkit and pass to our x3dom scene
+var threshold = 100; //threshold of the light
+
+var videoStream = null; // holds the stream
+var video = document.createElement('video'); //create a video element
+
+video.width = width; //initialize video
+video.height = height;
+video.autoplay = true;
+
+// Normalize the various vendor prefixed versions of getUserMedia.
+navigator.getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia ||
+	navigator.mozGetUserMedia || navigator.msGetUserMedia);
+var getUserMedia = function(t, onsuccess, onerror) { //get the userMedia
+	if (navigator.getUserMedia) {
+		return navigator.getUserMedia(t, onsuccess, onerror);
+	} else {
+		onerror(new Error('No getUserMedia implementation found.'));
+		return null;
+	}
+};
+var createObjectURL = window.URL.createObjectURL; //create URL for the stream
+if (!createObjectURL) { //check if it worked
+	throw new Error('URL.createObjectURL not found.'); //if not throw error
+}
+
+function startCam() { //
+	getUserMedia({
+			video: true,
+			audio: false
+		},
+		function(stream) {
+			video.crossOrigin = ''; //allow cross-domain communication
+			video.src = createObjectURL(stream); //create stream and use it as video source
+			videoStream = stream; //save to variable
+
+			// enable animation when tracking
+			document.getElementById('planet').setAttribute('enabled', 'true');
+		},
+		function(error) {
+			alert('Could not access webcam.'); //if webcam request failed print error
+		});
+}
+startCam(); //call startCam method
+var a = true;
+document.onload = function() //is executed when the page is fully loaded
+{
+	runtime = document.getElementById('x3d').runtime; //allows to manipulate the x3dom context during the runtime
+
+	root = document.getElementById('root'); //get the MatrixTransform node
+
+	runtime.exitFrame = function() {
+		if (!initDone) {
+			initializeTracker();
+			initDone = true;
+		}
+
+		if (doTracking) {
+			animate();
+
+			this.triggerRedraw(); //triggers redraw function
+
+			if (a) {
+				console.log(this);
+				a = false;
+			}
+
+		}
+	};
+};
+
+function redraw() //redraw
+{
+	videoCanvas.getContext('2d').drawImage(video, 0, 0);
+	canvas.getContext('2d').drawImage(videoCanvas, 0, 0, width, height);
+	// Tell JSARToolKit that the canvas has changed.
+	canvas.changed = true;
+}
+
+function animate() {
+	// Draw the video frame to the canvas.
+	try {
+		redraw();
+	} catch (e) {
+		// workaround for Firefox
+		if (e.name == 'NS_ERROR_NOT_AVAILABLE') {
+			setTimeout(function() {
+				redraw();
+			}, 10);
+		} else {
+			throw e;
+		}
+	}
+	// Detect the markers in the video frame.
+	var markerCount = detector.detectMarkerLite(raster, threshold);
+
+	for (var i = 0; i < markerCount; i++) {
+		// Get the marker matrix into the result matrix.
+		detector.getTransformMatrix(i, resultMat);
+
+		// Copy the marker matrix to the tmp matrix.
+		var tmpMat = adaptMarkerMatrix(resultMat);
+
+		// Copy the marker matrix over to your marker root object.
+		root.setAttribute('matrix', tmpMat.toGL().toString());
+	}
+}
+
+function adaptMarkerMatrix(arMat) {
+	var tmpMat = new x3dom.fields.SFMatrix4f(
+		arMat.m00, arMat.m01, arMat.m02, arMat.m03,
+		arMat.m10, arMat.m11, arMat.m12, arMat.m13,
+		arMat.m20, arMat.m21, arMat.m22, arMat.m23,
+		0, 0, 0, 1);
+
+	var translation = new x3dom.fields.SFVec3f(0, 0, 0),
+		scale = new x3dom.fields.SFVec3f(1, 1, 1);
+	var rotation = new x3dom.fields.Quaternion(0, 0, 1, 0),
+		scaleOrient = new x3dom.fields.Quaternion(0, 0, 1, 0);
+
+	tmpMat.getTransform(translation, rotation, scale, scaleOrient);
+
+	// camera image is flipped, therefore flip orientation, too
+	rotation.y *= -1;
+	rotation.z *= -1;
+	translation.y *= -1;
+	translation.z *= -1;
+
+	tmpMat = rotation.toMatrix();
+	tmpMat.setTranslate(translation);
+
+	return tmpMat;
+}
+
+function initializeTracker() {
+	// Setting up JSARToolKit
+	canvas = document.createElement('canvas');
+	canvas.id = 'trackerCanvas';
+	canvas.width = width;
+	canvas.height = height;
+	document.body.appendChild(canvas);
+
+	if (DEBUG) { //shows the debug window
+		var debugCanvas = document.createElement('canvas');
+		debugCanvas.id = 'debugCanvas';
+		debugCanvas.width = width;
+		debugCanvas.height = height;
+		document.body.appendChild(debugCanvas);
+	}
+
+	// Create an RGB raster object for the 2D canvas.
 	// JSARToolKit uses raster objects to read image data.
 	// Note that you need to set canvas.changed = true on every frame.
-	var raster = new NyARRgbRaster_Canvas2D(canvas);
+	raster = new NyARRgbRaster_Canvas2D(canvas);
 
 	// FLARParam is the thing used by FLARToolKit to set camera parameters.
 	// Here we create a FLARParam for images with 320x240 pixel dimensions.
-	var param = new FLARParam(320, 240);
+	var param = new FLARParam(width, height);
 
 	// The FLARMultiIdMarkerDetector is the actual detection engine for marker detection.
 	// It detects multiple ID markers. ID markers are special markers that encode a number.
-	var detector = new FLARMultiIdMarkerDetector(param, 120);
+	detector = new FLARMultiIdMarkerDetector(param, 120);
 
 	// For tracking video set continue mode to true. In continue mode, the detector
 	// tracks markers across multiple frames.
@@ -23,199 +183,33 @@ window.onload = function() {
 
 	// Copy the camera perspective matrix from the FLARParam to the WebGL library camera matrix.
 	// The second and third parameters determine the zNear and zFar planes for the perspective matrix.
-	var display = new Magi.Scene(canvas);
-	param.copyCameraMatrix(display.camera.perspectiveMatrix, 10, 10000);
+	var camera = document.getElementById('vf');
 
-	var video = document.createElement('video');
-	video.width = 320;
-	video.height = 240;
+	var zNear = camera.getNear();
+	var zFar = camera.getFar();
+	var perspectiveMatrix = runtime.projectionMatrix().toGL();
 
-	var getUserMedia = function(t, onsuccess, onerror) {
-		if (navigator.getUserMedia) {
-			return navigator.getUserMedia(t, onsuccess, onerror);
-		} else if (navigator.webkitGetUserMedia) {
-			return navigator.webkitGetUserMedia(t, onsuccess, onerror);
-		} else if (navigator.mozGetUserMedia) {
-			return navigator.mozGetUserMedia(t, onsuccess, onerror);
-		} else if (navigator.msGetUserMedia) {
-			return navigator.msGetUserMedia(t, onsuccess, onerror);
-		} else {
-			onerror(new Error("No getUserMedia implementation found."));
-		}
-	};
+	param.copyCameraMatrix(perspectiveMatrix, zNear, zFar);
 
-	var URL = window.URL || window.webkitURL;
-	var createObjectURL = URL.createObjectURL || webkitURL.createObjectURL;
-	if (!createObjectURL) {
-		throw new Error("URL.createObjectURL not found.");
-	}
+	var proj = new x3dom.fields.SFMatrix4f();
+	proj.setFromArray(perspectiveMatrix);
+	proj._22 *= -1;
+	proj._32 *= -1;
 
-	getUserMedia({
-			'video': true
-		},
-		function(stream) {
-			var url = createObjectURL(stream);
-			video.src = url;
-		},
-		function(error) {
-			alert("Couldn't access webcam.");
-		}
-	);
+	camera.setAttribute('projection', proj.toGL().toString());
 
-	// Draw the video frame to the raster canvas, scaled to 320x240.
-	canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
-
-	// Tell the raster object that the underlying canvas has changed.
-	canvas.changed = true;
-
-	// Do marker detection by using the detector object on the raster object.
-	// The threshold parameter determines the threshold value
-	// for turning the video frame into a 1-bit black-and-white image.
-	//
-	var markerCount = detector.detectMarkerLite(raster, threshold);
+	// Detecting markers
+	videoCanvas = document.getElementById('bgnd');
 
 	// Create a NyARTransMatResult object for getting the marker translation matrices.
-	var resultMat = new NyARTransMatResult();
+	resultMat = new NyARTransMatResult();
 
-	var markers = {};
+	// Draw the video frame to the raster canvas, scaled to 320x240.
+	// And tell the raster object that the underlying canvas has changed.
+	redraw();
+}
 
-	// Go through the detected markers and get their IDs and transformation matrices.
-	for (var idx = 0; idx < markerCount; idx++) {
-		// Get the ID marker data for the current marker.
-		// ID markers are special kind of markers that encode a number.
-		// The bytes for the number are in the ID marker data.
-		var id = detector.getIdMarkerData(idx);
-
-		// Read bytes from the id packet.
-		var currId = -1;
-		// This code handles only 32-bit numbers or shorter.
-		if (id.packetLength <= 4) {
-			currId = 0;
-			for (var i = 0; i < id.packetLength; i++) {
-				currId = (currId << 8) | id.getPacketData(i);
-			}
-		}
-
-		// If this is a new id, let's start tracking it.
-		if (markers[currId] == null) {
-			markers[currId] = {};
-		}
-		// Get the transformation matrix for the detected marker.
-		detector.getTransformMatrix(idx, resultMat);
-
-		// Copy the result matrix into our marker tracker object.
-		markers[currId].transform = Object.asCopy(resultMat);
-	}
-
-	function copyMarkerMatrix(arMat, glMat) {
-		glMat[0] = arMat.m00;
-		glMat[1] = -arMat.m10;
-		glMat[2] = arMat.m20;
-		glMat[3] = 0;
-		glMat[4] = arMat.m01;
-		glMat[5] = -arMat.m11;
-		glMat[6] = arMat.m21;
-		glMat[7] = 0;
-		glMat[8] = -arMat.m02;
-		glMat[9] = arMat.m12;
-		glMat[10] = -arMat.m22;
-		glMat[11] = 0;
-		glMat[12] = arMat.m03;
-		glMat[13] = -arMat.m13;
-		glMat[14] = arMat.m23;
-		glMat[15] = 1;
-	}
-
-	// I'm going to use a glMatrix-style matrix as an intermediary.
-	// So the first step is to create a function to convert a glMatrix matrix into a Three.js Matrix4.
-	THREE.Matrix4.prototype.setFromArray = function(m) {
-		return this.set(
-			m[0], m[4], m[8], m[12],
-			m[1], m[5], m[9], m[13],
-			m[2], m[6], m[10], m[14],
-			m[3], m[7], m[11], m[15]
-		);
-	};
-
-	// glMatrix matrices are flat arrays.
-	var tmp = new Float32Array(16);
-
-	// Create a camera and a marker root object for your Three.js scene.
-	var camera = new THREE.Camera();
-	scene.add(camera);
-
-	var markerRoot = new THREE.Object3D();
-	markerRoot.matrixAutoUpdate = false;
-
-	// Add the marker models and suchlike into your marker root object.
-	var cube = new THREE.Mesh(
-		new THREE.CubeGeometry(100, 100, 100),
-		new THREE.MeshBasicMaterial({
-			color: 0xff00ff
-		})
-	);
-	cube.position.z = -50;
-	markerRoot.add(cube);
-
-	// Add the marker root to your scene.
-	scene.add(markerRoot);
-
-	// Next we need to make the Three.js camera use the FLARParam matrix.
-	param.copyCameraMatrix(tmp, 10, 10000);
-	camera.projectionMatrix.setFromArray(tmp);
-
-
-	// To display the video, first create a texture from it.
-	var videoTex = new THREE.Texture(videoCanvas);
-
-	// Then create a plane textured with the video.
-	var plane = new THREE.Mesh(
-		new THREE.PlaneGeometry(2, 2, 0),
-		new THREE.MeshBasicMaterial({
-			map: videoTex
-		})
-	);
-
-	// The video plane shouldn't care about the z-buffer.
-	plane.material.depthTest = false;
-	plane.material.depthWrite = false;
-
-	// Create a camera and a scene for the video plane and
-	// add the camera and the video plane to the scene.
-	var videoCam = new THREE.Camera();
-	var videoScene = new THREE.Scene();
-	videoScene.add(plane);
-	videoScene.add(videoCam);
-
-	// On every frame do the following:
-	function tick() {
-		// Draw the video frame to the canvas.
-		videoCanvas.getContext('2d').drawImage(video, 0, 0);
-		canvas.getContext('2d').drawImage(videoCanvas, 0, 0, canvas.width, canvas.height);
-
-		// Tell JSARToolKit that the canvas has changed.
-		canvas.changed = true;
-
-		// Update the video texture.
-		videoTex.needsUpdate = true;
-
-		// Detect the markers in the video frame.
-		var markerCount = detector.detectMarkerLite(raster, threshold);
-		for (var i = 0; i < markerCount; i++) {
-			// Get the marker matrix into the result matrix.
-			detector.getTransformMatrix(i, resultMat);
-
-			// Copy the marker matrix to the tmp matrix.
-			copyMarkerMatrix(resultMat, tmp);
-
-			// Copy the marker matrix over to your marker root object.
-			markerRoot.matrix.setFromArray(tmp);
-		}
-
-		// Render the scene.
-		renderer.autoClear = false;
-		renderer.clear();
-		renderer.render(videoScene, videoCam);
-		renderer.render(scene, camera);
-	}
+function showMarker() {
+	var win = window.open('./marker.png', 'Marker', 'width=420,height=420');
+	win.focus();
 }
