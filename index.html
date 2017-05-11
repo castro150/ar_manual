@@ -22,22 +22,29 @@
 
           <MatrixTransform id="root">
             <Transform rotation="0 1 0 3.14159265359">
-              <!-- <transform id="planet" translation="0 0 0.2">
+              <transform id="planet" translation="0 0 0.2">
                 <shape id="earth">
                   <appearance>
-                    <material diffuseColor="0.5 1 0"></material>
+                    <!-- <material diffuseColor="0.5 1 0"></material> -->
+                    <material diffuseColor="red"></material>
                   </appearance>
-                  <box size="60 60 60"></box>
+                  <box size="120 35 60"></box>
                 </shape>
-              </transform> -->
-              <transform id="planet" rotation="0 0 0 0">
+              </transform>
+              <transform id="planet" translation="28 25 0" rotation="0 1 0 5">
                 <shape id="earth2">
                   <appearance>
                     <material diffuseColor="red"></material>
                   </appearance>
-                  <!-- <sphere></sphere> -->
                   <cylinder radius="20" height="10"></cylinder>
-                  <!-- <box size="100 100 10"></box> -->
+                </shape>
+              </transform>
+              <transform id="planet" translation="-28 25 0" rotation="0 1 0 5">
+                <shape id="earth2">
+                  <appearance>
+                    <material diffuseColor="red"></material>
+                  </appearance>
+                  <cylinder radius="20" height="10"></cylinder>
                 </shape>
               </transform>
             </Transform>
