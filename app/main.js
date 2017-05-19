@@ -114,12 +114,28 @@ function animate() {
 		// Get the marker matrix into the result matrix.
 		detector.getTransformMatrix(i, resultMat);
 
+		var markerId = getMarkerNumber(i);
+
 		// Copy the marker matrix to the tmp matrix.
 		var tmpMat = adaptMarkerMatrix(resultMat);
 
 		// Copy the marker matrix over to your marker root object.
 		root.setAttribute('matrix', tmpMat.toGL().toString());
 	}
+}
+
+function getMarkerNumber(index) {
+	var data = detector.getIdMarkerData(index);
+	if (data.packetLength > 4) {
+		return -1;
+	}
+
+	var result = 0;
+	for (var i = 0; i < data.packetLength; i++) {
+		result = (result << 8) | data.getPacketData(i);
+	}
+
+	return result;
 }
 
 function adaptMarkerMatrix(arMat) {
