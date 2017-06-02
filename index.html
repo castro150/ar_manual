@@ -3,54 +3,17 @@
     <title>AR Manual</title>
     <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css"/>
     <script src="https://www.x3dom.org/download/x3dom.js"></script>
+    <!-- TODO voltar com o minificado -->
     <script src="dependencies/JSARToolKit.js"></script>
-    <script src="dependencies/magi.js"></script>
+    <script src="dependencies/three.min.js"></script>
     <link rel="stylesheet" href="app/style.css"/>
-    <script src="app/main.js"></script>
+    <script src="app/ardetector.js"></script>
+    <script src="app/arobject.js"></script>
+    <script src="app/arview.js"></script>
+    <script src="app/webcam.js"></script>
+    <script src="app/app.js"></script>
   </head>
   <body>
-    <!-- <h1>Make it!</h1> -->
-
-    <div class="ar">
-      <canvas id="bgnd" width="640px" height="480px"></canvas>
-    </div>
-
-    <div id="container">
-      <X3D id="x3d" showStat="true" showLog="false" width="640px" height="480px">
-        <Scene>
-          <Viewfrustum id="vf"></Viewfrustum>
-
-          <MatrixTransform id="root">
-            <Transform rotation="0 1 0 3.14159265359">
-              <transform id="planet" translation="0 0 0.2">
-                <shape id="earth">
-                  <appearance>
-                    <!-- <material diffuseColor="0.5 1 0"></material> -->
-                    <material diffuseColor="red"></material>
-                  </appearance>
-                  <box size="120 35 60"></box>
-                </shape>
-              </transform>
-              <transform id="planet" translation="28 23 0" rotation="0 1 0 5">
-                <shape id="earth2">
-                  <appearance>
-                    <material diffuseColor="red"></material>
-                  </appearance>
-                  <cylinder radius="20" height="10"></cylinder>
-                </shape>
-              </transform>
-              <transform id="planet" translation="-28 23 0" rotation="0 1 0 5">
-                <shape id="earth2">
-                  <appearance>
-                    <material diffuseColor="red"></material>
-                  </appearance>
-                  <cylinder radius="20" height="10"></cylinder>
-                </shape>
-              </transform>
-            </Transform>
-          </MatrixTransform>
-        </Scene>
-      </X3D>
-    </div>
+    <div id="ar_manual"></div>
   </body>
 </html>
