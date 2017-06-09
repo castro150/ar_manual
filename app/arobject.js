@@ -21,33 +21,35 @@ var generateArobject = function() {
 		return model;
 	}
 
-	function createMarkerMesh(color) {
-		let geometry = new THREE.CubeGeometry(100, 100, 100);
-		let material = new THREE.MeshPhongMaterial({
-			color: color,
-			side: THREE.DoubleSide
+	function createMarkerMesh(file, position, callback) {
+		let loader = new THREE.JSONLoader();
+		loader.load(file, function(geometry, material) {
+			let mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(material));
+			mesh.rotation.x = -90;
+			if (position) {
+				mesh.position.x = position.x;
+				mesh.position.y = position.y;
+				mesh.position.z = position.z;
+			}
+			callback(mesh);
 		});
-
-		let mesh = new THREE.Mesh(geometry, material);
-		mesh.position.z = -50;
-
-		return mesh;
 	}
 
-	function createMarkerObject(params) {
+	function createMarkerObject(file, position, callback) {
 		let modelContainer = createContainer();
 
-		let modelMesh = createMarkerMesh(params.color);
-		modelContainer.add(modelMesh);
+		createMarkerMesh(file, position, function(modelMesh) {
+			modelContainer.add(modelMesh);
 
-		function transform(matrix) {
-			modelContainer.transformFromArray(matrix);
-		}
+			function transform(matrix) {
+				modelContainer.transformFromArray(matrix);
+			}
 
-		return {
-			transform: transform,
-			model: modelContainer
-		}
+			callback({
+				transform: transform,
+				model: modelContainer
+			});
+		});
 	}
 
 	return {

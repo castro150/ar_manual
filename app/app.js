@@ -7,6 +7,8 @@ let webcam = generateWebcam();
 
 let canvas, context, detector, view = undefined;
 
+let actualObject = 0;
+
 // Initializes components and starts the game loop
 function initialize() {
 	// Create a canvas element to which we will copy video.
@@ -58,35 +60,41 @@ webcam.waitForAuthorization(function() {
 
 // This function is called when a marker is initally detected on the stream
 function onMarkerCreated(marker) {
-	let object = markerObjects[marker.id];
-	if (object) {
-		object.transform(marker.matrix);
-		view.add(object);
+	if (marker.id === 64) {
+		let object = markerObjects[actualObject];
+		if (object) {
+			object.transform(marker.matrix);
+			view.add(object);
+		}
 	}
 }
 
 // This function is called when an existing marker is repositioned
 function onMarkerUpdated(marker) {
-	let object = markerObjects[marker.id];
-	if (object) {
-		object.transform(marker.matrix);
+	if (marker.id === 64) {
+		let object = markerObjects[actualObject];
+		if (object) {
+			object.transform(marker.matrix);
+		}
 	}
 }
 
 // This function is called when a marker disappears from the stream.
 function onMarkerDestroyed(marker) {
-	let object = markerObjects[marker.id];
-	if (object) {
-		view.remove(object);
+	if (marker.id === 64) {
+		let object = markerObjects[actualObject];
+		if (object) {
+			view.remove(object);
+		}
 	}
 }
 
 // Create marker objects associated with the desired marker ID.
-let markerObjects = {
-	64: arobject.createMarkerObject({
-		color: 0xAA0000
-	}), // Marker #16, red.
-	10: arobject.createMarkerObject({
-		color: 0x00BB00
-	}), // Marker #32, green.
-};
+let markerObjects = [];
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
+	x: 50,
+	y: 0,
+	z: 0
+}, function(object) {
+	markerObjects[0] = object;
+});

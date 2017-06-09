@@ -52,7 +52,7 @@ var generateArdetector = function() {
 			return result;
 		}
 
-		let persistTime = 1;
+		let persistTime = 50;
 		let newMarker = function(id, matrix) {
 			return {
 				id: id,
