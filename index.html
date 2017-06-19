@@ -1,11 +1,12 @@
 <html>
   <head>
     <title>AR Manual</title>
-    <link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css"/>
-    <script src="https://www.x3dom.org/download/x3dom.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- TODO voltar com o minificado -->
     <script src="dependencies/JSARToolKit.js"></script>
     <script src="dependencies/three.min.js"></script>
+    <script src="dependencies/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="dependencies/bootstrap.min.css"/>
     <link rel="stylesheet" href="app/style.css"/>
     <script src="app/ardetector.js"></script>
     <script src="app/arobject.js"></script>
@@ -15,5 +16,11 @@
   </head>
   <body>
     <div id="ar_manual" style="text-align: center;"></div>
+
+    <div class="row">
+      <div class="col-md-offset-5 col-md-2" style="text-align: center; padding-top: 5px;">
+        <button type="button" class="btn btn-primary" onclick="console.log('teste')">Próxima Peça</button>
+      </div>
+    </div>
   </body>
 </html>
