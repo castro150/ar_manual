@@ -87,12 +87,21 @@ var generateArdetector = function() {
 					}
 				}
 			}
-		}
+		};
+
+		let forceDestroy = function(id, onDestroy) {
+			let marker = markers[id];
+			if (marker) {
+				onDestroy(marker);
+				delete markers[id];
+			}
+		};
 
 		return {
 			detect: detect,
+			forceDestroy: forceDestroy,
 			getCameraMatrix: getCameraMatrix,
-		}
+		};
 	}
 
 	return {

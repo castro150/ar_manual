@@ -89,6 +89,11 @@ function onMarkerDestroyed(marker) {
 	}
 }
 
+function next() {
+	detector.forceDestroy(64, onMarkerDestroyed);
+	actualObject++;
+}
+
 // Create marker objects associated with the desired marker ID.
 let markerObjects = [];
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
@@ -97,4 +102,11 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 	z: 0
 }, function(object) {
 	markerObjects[0] = object;
+});
+arobject.createMarkerObject('app/mesh/peca-azul-2-2.json', {
+	x: 50,
+	y: 0,
+	z: 0
+}, function(object) {
+	markerObjects[1] = object;
 });
