@@ -94,6 +94,13 @@ function next() {
 	actualObject++;
 }
 
+function previous() {
+	if (actualObject > 0) {
+		detector.forceDestroy(64, onMarkerDestroyed);
+		actualObject--;
+	}
+}
+
 // Create marker objects associated with the desired marker ID.
 let markerObjects = [];
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
