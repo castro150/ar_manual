@@ -21,24 +21,33 @@ var generateArobject = function() {
 		return model;
 	}
 
-	function createMarkerMesh(file, position, callback) {
+	function createMarkerMesh(file, position, rotation, scale, callback) {
 		let loader = new THREE.JSONLoader();
 		loader.load(file, function(geometry, material) {
 			let mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial(material));
-			mesh.rotation.x = -90;
 			if (position) {
 				mesh.position.x = position.x;
 				mesh.position.y = position.y;
 				mesh.position.z = position.z;
 			}
+			if (rotation) {
+				mesh.rotation.x = rotation.x;
+				mesh.rotation.y = rotation.y;
+				mesh.rotation.z = rotation.z;
+			}
+			if (scale) {
+				mesh.scale.x = scale.x;
+				mesh.scale.y = scale.y;
+				mesh.scale.z = scale.z;
+			}
 			callback(mesh);
 		});
 	}
 
-	function createMarkerObject(file, position, callback) {
+	function createMarkerObject(file, position, rotation, scale, callback) {
 		let modelContainer = createContainer();
 
-		createMarkerMesh(file, position, function(modelMesh) {
+		createMarkerMesh(file, position, rotation, scale, function(modelMesh) {
 			modelContainer.add(modelMesh);
 
 			function transform(matrix) {

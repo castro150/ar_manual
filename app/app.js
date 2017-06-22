@@ -100,6 +100,14 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 	x: 50,
 	y: 0,
 	z: 0
+}, {
+	x: -90,
+	y: 0,
+	z: 0
+}, {
+	x: 1,
+	y: 1,
+	z: 1
 }, function(object) {
 	markerObjects[0] = object;
 });
@@ -107,6 +115,14 @@ arobject.createMarkerObject('app/mesh/peca-azul-2-2.json', {
 	x: 50,
 	y: 0,
 	z: 0
+}, {
+	x: -90,
+	y: 0,
+	z: 0
+}, {
+	x: 1,
+	y: 1,
+	z: 1
 }, function(object) {
 	markerObjects[1] = object;
 });
