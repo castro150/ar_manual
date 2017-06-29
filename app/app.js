@@ -105,7 +105,7 @@ function previous() {
 let markerObjects = [];
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 	x: 40,
-	y: 195,
+	y: 197,
 	z: -20
 }, {
 	x: -1.57,
@@ -120,7 +120,7 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 });
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 	x: 40,
-	y: 155,
+	y: 159,
 	z: -20
 }, {
 	x: -1.57,
@@ -134,7 +134,7 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
 	markerObjects[1] = object;
 });
 arobject.createMarkerObject('app/mesh/peca-azul-2-4.json', {
-	x: 40,
+	x: 35,
 	y: 210,
 	z: 0
 }, {
@@ -149,7 +149,7 @@ arobject.createMarkerObject('app/mesh/peca-azul-2-4.json', {
 	markerObjects[2] = object;
 });
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
-	x: 40,
+	x: 25,
 	y: 225,
 	z: 40
 }, {
@@ -164,12 +164,12 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
 	markerObjects[3] = object;
 });
 arobject.createMarkerObject('app/mesh/peca-azul-2-4.json', {
-	x: 40,
-	y: 150,
+	x: 32,
+	y: 147,
 	z: 0
 }, {
 	x: -1.57,
-	y: 1.65,
+	y: 1.62,
 	z: 0
 }, {
 	x: 1.25,
@@ -179,8 +179,8 @@ arobject.createMarkerObject('app/mesh/peca-azul-2-4.json', {
 	markerObjects[4] = object;
 });
 arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
-	x: 40,
-	y: 160,
+	x: 25,
+	y: 155,
 	z: 40
 }, {
 	x: -1.57,
@@ -193,6 +193,21 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
 }, function(object) {
 	markerObjects[5] = object;
 });
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-4.json', {
+	x: 0,
+	y: 185,
+	z: 0
+}, {
+	x: -1.57,
+	y: 0.05,
+	z: 0
+}, {
+	x: 1.25,
+	y: 1.25,
+	z: 1.25
+}, function(object) {
+	markerObjects[6] = object;
+});
 arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-4.json', {
 	x: 50,
 	y: 200,
@@ -202,11 +217,11 @@ arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-4.json', {
 	y: 0,
 	z: 0
 }, {
-	x: 1.2,
-	y: 1.2,
-	z: 1.2
+	x: 1.25,
+	y: 1.25,
+	z: 1.25
 }, function(object) {
-	markerObjects[6] = object;
+	markerObjects[7] = object;
 });
 arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-4.json', {
 	x: 50,
@@ -217,122 +232,152 @@ arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-4.json', {
 	y: 0,
 	z: 0
 }, {
-	x: 1.2,
-	y: 1.2,
-	z: 1.2
-}, function(object) {
-	markerObjects[7] = object;
-});
-arobject.createMarkerObject('app/mesh/bloco-azul-4-2-4.json', {
-	x: 50,
-	y: 215,
-	z: 0
-}, {
-	x: -1.57,
-	y: 1.65,
-	z: 0
-}, {
 	x: 1.25,
 	y: 1.25,
 	z: 1.25
 }, function(object) {
 	markerObjects[8] = object;
 });
-arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-2.json', {
+arobject.createMarkerObject('app/mesh/bloco-azul-4-2-4.json', {
 	x: 50,
-	y: 235,
-	z: 40
+	y: 220,
+	z: 5
 }, {
 	x: -1.57,
-	y: 1.65,
+	y: 1.64,
 	z: 0
 }, {
-	x: 1.4,
-	y: 1.4,
-	z: 1.4
+	x: 1.35,
+	y: 1.35,
+	z: 1.35
 }, function(object) {
 	markerObjects[9] = object;
 });
-arobject.createMarkerObject('app/mesh/bloco-azul-4-2-4.json', {
-	x: 50,
-	y: 150,
-	z: 0
+arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-2.json', {
+	x: 40,
+	y: 235,
+	z: 45
 }, {
 	x: -1.57,
-	y: 1.65,
+	y: 1.60,
 	z: 0
 }, {
-	x: 1.25,
-	y: 1.25,
-	z: 1.25
+	x: 1.5,
+	y: 1.5,
+	z: 1.5
 }, function(object) {
 	markerObjects[10] = object;
 });
-arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-2.json', {
+arobject.createMarkerObject('app/mesh/bloco-azul-4-2-4.json', {
 	x: 50,
-	y: 165,
-	z: 40
-}, {
-	x: -1.57,
-	y: 1.65,
+	y: 153,
 	z: 0
 }, {
-	x: 1.4,
-	y: 1.4,
-	z: 1.4
+	x: -1.57,
+	y: 1.62,
+	z: 0
+}, {
+	x: 1.3,
+	y: 1.3,
+	z: 1.3
 }, function(object) {
 	markerObjects[11] = object;
 });
-// TODO colocar a porta aqui
-arobject.createMarkerObject('app/mesh/peca-vermelha-2-8.json', {
-	x: 90,
-	y: 210,
-	z: -40
+arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-4.json', {
+	x: 20,
+	y: 195,
+	z: 10
 }, {
 	x: -1.57,
-	y: 1.65,
+	y: 0,
 	z: 0
 }, {
-	x: 1.4,
-	y: 1.4,
-	z: 1.4
+	x: 1.35,
+	y: 1.35,
+	z: 1.35
+}, function(object) {
+	markerObjects[12] = object;
+});
+arobject.createMarkerObject('app/mesh/bloco-vermelho-4-2-2.json', {
+	x: 40,
+	y: 160,
+	z: 45
+}, {
+	x: -1.57,
+	y: 1.62,
+	z: 0
+}, {
+	x: 1.5,
+	y: 1.5,
+	z: 1.5
 }, function(object) {
 	markerObjects[13] = object;
 });
-arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
+// TODO colocar a porta aqui
+// arobject.createMarkerObject('app/mesh/porta.json', {
+// 	x: 40,
+// 	y: 160,
+// 	z: 45
+// }, {
+// 	x: -1.57,
+// 	y: 1.65,
+// 	z: 0
+// }, {
+// 	x: 1.4,
+// 	y: 1.4,
+// 	z: 1.4
+// }, function(object) {
+// 	markerObjects[12] = object;
+// });
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-8.json', {
 	x: 90,
-	y: 190,
-	z: -40
+	y: 213,
+	z: -30
 }, {
 	x: -1.57,
 	y: 1.65,
 	z: 0
 }, {
-	x: 1.4,
-	y: 1.4,
-	z: 1.4
+	x: 1.42,
+	y: 1.42,
+	z: 1.42
 }, function(object) {
 	markerObjects[14] = object;
 });
-arobject.createMarkerObject('app/mesh/peca-vermelha-2-8.json', {
-	x: 90,
-	y: 165,
-	z: -40
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
+	x: 92,
+	y: 190,
+	z: -30
 }, {
 	x: -1.57,
 	y: 1.65,
 	z: 0
 }, {
-	x: 1.4,
-	y: 1.4,
-	z: 1.4
+	x: 1.35,
+	y: 1.35,
+	z: 1.35
 }, function(object) {
 	markerObjects[15] = object;
 });
-arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-8.json', {
 	x: 90,
-	y: 205,
-	z: 10
+	y: 167,
+	z: -30
+}, {
+	x: -1.57,
+	y: 1.65,
+	z: 0
+}, {
+	x: 1.35,
+	y: 1.35,
+	z: 1.35
+}, function(object) {
+	markerObjects[16] = object;
+});
+arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
+	x: 70,
+	y: 210,
+	z: 15
 }, {
 	x: -1.57,
 	y: 1.65,
@@ -342,5 +387,50 @@ arobject.createMarkerObject('app/mesh/peca-vermelha-2-2.json', {
 	y: 1.5,
 	z: 1.5
 }, function(object) {
-	markerObjects[16] = object;
+	markerObjects[17] = object;
+});
+arobject.createMarkerObject('app/mesh/peca-azul-2-6.json', {
+	x: 130,
+	y: 230,
+	z: 15
+}, {
+	x: -1.57,
+	y: 0.05,
+	z: 0
+}, {
+	x: 1.65,
+	y: 1.65,
+	z: 1.65
+}, function(object) {
+	markerObjects[18] = object;
+});
+arobject.createMarkerObject('app/mesh/peca-azul-2-6.json', {
+	x: 130,
+	y: 205,
+	z: 15
+}, {
+	x: -1.57,
+	y: 0.05,
+	z: 0
+}, {
+	x: 1.68,
+	y: 1.68,
+	z: 1.68
+}, function(object) {
+	markerObjects[19] = object;
+});
+arobject.createMarkerObject('app/mesh/peca-preta-2-4.json', {
+	x: 127,
+	y: 212,
+	z: 0
+}, {
+	x: -1.57,
+	y: 1.63,
+	z: 0
+}, {
+	x: 1.7,
+	y: 1.7,
+	z: 1.7
+}, function(object) {
+	markerObjects[20] = object;
 });
